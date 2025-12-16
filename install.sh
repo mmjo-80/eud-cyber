@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-GUACVM="./GUACVM/create-GUAC-VM.sh"
+GUACVM="./GUACVM/GUACVM_installer.sh"
 
 echo "Starting Guacamole VM creation..."
 bash "$GUACVM"
