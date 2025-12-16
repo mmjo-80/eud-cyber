@@ -46,7 +46,7 @@ echo "VM name to use: $VM_NAME"
 # ===== Download IMG if missing =====
 if [ ! -f "$IMG_PATH" ]; then
     echo "Downloading $IMG_NAME IMG..."
-    wget --show-progress -O "IMG_PATH" "IMG_URL"
+    wget --show-progress -O "$IMG_PATH" "$IMG_URL"
 else
     echo "IMG already exists: $IMG_PATH"
 fi
