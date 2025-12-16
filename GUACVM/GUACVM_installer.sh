@@ -43,7 +43,7 @@ qm create $VMID \
 # ===== Add disk =====
 qm set $VMID \
   --scsihw virtio-scsi-pci \
-  --scsi0 ${DISK_STORAGE}:${DISK_SIZE}
+  --scsi0 ${DISK_STORAGE}:size=${DISK_SIZE}
 
 # ===== Attach ISO =====
 qm set $VMID \
