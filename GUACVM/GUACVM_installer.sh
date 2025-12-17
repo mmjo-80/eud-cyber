@@ -90,10 +90,9 @@ qm set $VMID --agent enabled=1
 qm set $VMID --onboot 1
 
 # ===== Cloud-init =====
-qm set $VMID
+qm set $VMID --sshkeys ~/.ssh/id_rsa.pub \
   --ipconfig0 $IP_ADDR
   --ciuser=ubuntu \
-  --sshkey ~/.ssh/id_rsa.pub \
   --cipassword 'Password1!' \
   --searchdomain cloud.local \
   --nameserver $DNS_SERVER \
