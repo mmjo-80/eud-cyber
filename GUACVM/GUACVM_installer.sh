@@ -91,7 +91,7 @@ qm set $VMID --onboot 1
 
 # ===== Cloud-init =====
 qm set $VMID
-  --ipconfig0 ip=$IP_ADDR
+  --ipconfig0 $IP_ADDR
   --ciuser=ubuntu \
   --sshkey ~/.ssh/id_rsa.pub \
   --cipassword 'Password1!' \
