@@ -20,16 +20,15 @@ LAN_BRIDGE="lan1"
 apt install -y wget bzip2
 
 OPN_VERSION="24.1"
-ISO_BASE="OPNsense-${OPN_VERSION}-dvd-amd64.iso"
-ISO_BZ2="${ISO_BASE}.bz2"
+IMG_BASE="OPNsense-${OPN_VERSION}-nano-amd64.img"
+IMG_BZ2="${IMG_BASE}.bz2"
 
-ISO_DIR="/var/lib/vz/template/iso"
-ISO_PATH="${ISO_DIR}/${ISO_BASE}"
-ISO_BZ2_PATH="${ISO_DIR}/${ISO_BZ2}"
+IMG_DIR="/var/lib/vz/template/cache"
+IMG_PATH="${IMG_DIR}/${IMG_BASE}"
+IMG_BZ2_PATH="${IMG_DIR}/${IMG_BZ2}"
 
 CONFIG_SRC="/root/opnsense/config.xml"
-HOOK_PATH="/var/lib/vz/snippets/opnsense-hook.sh"
-
+HOOK="/var/lib/vz/snippets/opnsense-hook.sh"
 
 ### ===== CHECKS =====
 if [[ ! -f "$CONFIG_SRC" ]]; then
@@ -37,12 +36,20 @@ if [[ ! -f "$CONFIG_SRC" ]]; then
   exit 1
 fi
 
-### ===== DOWNLOAD ISO =====
-if [[ ! -f "$ISO_PATH" ]]; then
-  echo "Downloading OPNsense ISO..."
-  wget -O "$ISO_PATH" \
-    https://pkg.opnsense.org/releases/${OPN_VERSION}/${ISO_NAME}
+mkdir -p "$IMG_DIR"
+
+### ===== DOWNLOAD IMG.BZ2 =====
+if [[ ! -f "$IMG_PATH" ]]; then
+  if [[ ! -f "$IMG_BZ2_PATH" ]]; then
+    echo "Downloading OPNsense nano image..."
+    wget -O "$IMG_BZ2_PATH" \
+      https://mirror.opnsense.org/releases/${OPN_VERSION}/${IMG_BZ2}
+  fi
+
+  echo "Unpacking image..."
+  bunzip2 -fk "$IMG_BZ2_PATH"
 fi
+
 
 # ===== Find next free VMID =====
 VMID=$START_VMID
@@ -63,7 +70,7 @@ echo "VM name to use: $VM_NAME"
 
 ### ===== CREATE VM =====
 qm create $VMID \
-  --name $VM_NAME \
+  --name "$VMNAME" \
   --memory $RAM \
   --cores $CORES \
   --cpu host \
@@ -71,16 +78,18 @@ qm create $VMID \
   --ostype l26 \
   --scsihw virtio-scsi-pci \
   --net0 virtio,bridge=$WAN_BRIDGE \
-  --net1 virtio,bridge=$LAN_BRIDGE
+  --net1 virtio,bridge=$LAN_BRIDGE \
+  --boot order=scsi0 \
+  --vga std
 
-### ===== DISKS =====
-qm set $VMID \
-  --scsi0 $DISK_STORAGE:$DISK_SIZE \
-  --scsi1 $DISK_STORAGE:1 \
-  --cdrom $ISO_STORAGE:iso/$ISO_BASE \
-  --boot order="ide2,scsi0"
+### ===== IMPORT DISK =====
+qm importdisk $VMID "$IMG_PATH" $STORAGE --format raw
 
-qm set $VMID --serial0 socket --vga serial0
+# Attach imported disk as scsi0
+qm set $VMID --scsi0 $STORAGE:vm-$VMID-disk-0
+
+### ===== CONFIG DISK FOR config.xml =====
+qm set $VMID --scsi1 $STORAGE:1
 
 ### ===== HOOK SCRIPT (inject config.xml) =====
 cat > "$HOOK_PATH" <<EOF
