@@ -2,7 +2,8 @@
 set -e
 
 ### VARIABLES (EDIT THESE) ###
-BRIDGE="lan1"
+BRIDGE1="lan1"
+BRIDGE2="lan2"
 
 ### CHECK ROOT ###
 if [[ $EUID -ne 0 ]]; then
@@ -22,16 +23,13 @@ cp /etc/network/interfaces /etc/network/interfaces.bak.$(date +%F_%T)
 echo "Writing OVS network configuration..."
 
 cat > /etc/network/interfaces <<EOF
-auto lo
-iface lo inet loopback
 
-auto $NIC
-iface $NIC inet manual
-    ovs_type OVSPort
-    ovs_bridge $BRIDGE
+auto $BRIDGE1
+iface $BRIDGE1 inet manuel
+    ovs_type OVSBridge
 
-auto $BRIDGE
-iface $BRIDGE inet static
+auto $BRIDGE2
+iface $BRIDGE2 inet manuel
     ovs_type OVSBridge
 EOF
 
