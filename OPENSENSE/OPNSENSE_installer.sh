@@ -83,13 +83,13 @@ qm create $VMID \
   --vga std
 
 ### ===== IMPORT DISK =====
-qm import $VMID "$IMG_PATH" $STORAGE --format raw
+qm importdisk $VMID "$IMG_PATH" $DISK_STORAGE
 
 # Attach imported disk as scsi0
-qm set $VMID --scsi0 $STORAGE:vm-$VMID-disk-0
+qm set $VMID --scsi0 $DISK_STORAGE:vm-$VMID-disk-0
 
 ### ===== CONFIG DISK FOR config.xml =====
-qm set $VMID --scsi1 $STORAGE:1
+qm set $VMID --scsi1 $DISK_STORAGE:1
 
 ### ===== HOOK SCRIPT (inject config.xml) =====
 cat > "$HOOK_PATH" <<EOF
