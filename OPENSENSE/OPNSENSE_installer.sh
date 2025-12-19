@@ -28,7 +28,7 @@ IMG_PATH="${IMG_DIR}/${IMG_BASE}"
 IMG_BZ2_PATH="${IMG_DIR}/${IMG_BZ2}"
 
 CONFIG_SRC="/root/opnsense/config.xml"
-HOOK="/var/lib/vz/snippets/opnsense-hook.sh"
+HOOK_PATH="/var/lib/vz/snippets/opnsense-hook.sh"
 
 ### ===== CHECKS =====
 if [[ ! -f "$CONFIG_SRC" ]]; then
