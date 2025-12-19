@@ -19,13 +19,17 @@ LAN_BRIDGE="lan1"
 #install bzip2 for unzip opensense iso
 apt install -y wget bzip2
 
-# OPNsense
 OPN_VERSION="24.1"
-ISO_NAME="OPNsense-${OPN_VERSION}-dvd-amd64.iso"
-ISO_PATH="/var/lib/vz/template/iso/${ISO_NAME}"
+ISO_BASE="OPNsense-${OPN_VERSION}-dvd-amd64.iso"
+ISO_BZ2="${ISO_BASE}.bz2"
+
+ISO_DIR="/var/lib/vz/template/iso"
+ISO_PATH="${ISO_DIR}/${ISO_BASE}"
+ISO_BZ2_PATH="${ISO_DIR}/${ISO_BZ2}"
 
 CONFIG_SRC="/root/opnsense/config.xml"
 HOOK_PATH="/var/lib/vz/snippets/opnsense-hook.sh"
+
 
 ### ===== CHECKS =====
 if [[ ! -f "$CONFIG_SRC" ]]; then
@@ -37,7 +41,7 @@ fi
 if [[ ! -f "$ISO_PATH" ]]; then
   echo "Downloading OPNsense ISO..."
   wget -O "$ISO_PATH" \
-    https://mirror.opnsense.org/releases/${OPN_VERSION}/${ISO_NAME}
+    https://pkg.opnsense.org/releases/${OPN_VERSION}/${ISO_NAME}
 fi
 
 # ===== Find next free VMID =====
