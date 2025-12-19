@@ -16,7 +16,7 @@ DOMAIN="local"
 TIMEZONE="UTC"
 
 # LAN defaults
-LAN_IP="192.168.1.1"
+LAN_IP="192.168.10.1"
 LAN_CIDR="24"
 
 # Default password: opnsense
@@ -45,7 +45,7 @@ else
   exit 1
 fi
 
-cat > /root/opnsense/config.xml" <<EOF
+cat > /root/opnsense/config.xml <<EOF
 <?xml version="1.0"?>
 <opnsense>
   <system>
