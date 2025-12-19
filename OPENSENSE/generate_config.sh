@@ -22,9 +22,6 @@ LAN_CIDR="24"
 # Default password: opnsense
 ROOT_PASSWORD_HASH='$2y$10$u1rPZJvM0Qz9sPZP6UZZ6OaGxK2p2pF0XjU5O4Hn5qjz'
 
-# Print pwd and store it as sting
-PATH=($pwd)
-
 if [ "$MODE" = "1" ]; then
   WAN_IP_BLOCK="<ipaddr>dhcp</ipaddr>"
   WAN_GATEWAY_BLOCK=""
@@ -48,7 +45,7 @@ else
   exit 1
 fi
 
-cat > $PATH"/config.xml" <<EOF
+cat > /root/opnsense/config.xml" <<EOF
 <?xml version="1.0"?>
 <opnsense>
   <system>
