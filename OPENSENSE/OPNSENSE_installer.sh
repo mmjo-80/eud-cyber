@@ -23,7 +23,7 @@ OPN_VERSION="24.1"
 IMG_BASE="OPNsense-${OPN_VERSION}-nano-amd64.img"
 IMG_BZ2="${IMG_BASE}.bz2"
 
-IMG_DIR="/var/lib/vz/template/cache"
+IMG_DIR="/var/lib/vz/template"
 IMG_PATH="${IMG_DIR}/${IMG_BASE}"
 IMG_BZ2_PATH="${IMG_DIR}/${IMG_BZ2}"
 
