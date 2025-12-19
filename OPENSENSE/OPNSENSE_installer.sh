@@ -84,15 +84,26 @@ qm set $VMID --serial0 socket --vga serial0
 ### ===== HOOK SCRIPT (inject config.xml) =====
 cat > "$HOOK_PATH" <<EOF
 #!/bin/bash
-VMID="\$1"
-PHASE="\$2"
+VMID="$1"
+PHASE="$2"
 
-if [ "\$PHASE" = "pre-start" ]; then
-  qm mount \$VMID --disk scsi1 --mountpoint /mnt
-  mkdir -p /mnt/conf
-  cp $CONFIG_SRC /mnt/conf/config.xml
-  qm unmount \$VMID
+CONFIG_SRC="/root/opnsense/config.xml"
+MOUNTPOINT="/mnt/opnsense-config"
+DISK="scsi1"
+
+if [ "$PHASE" = "pre-start" ]; then
+  echo "[HOOK] Injecting OPNsense config.xml"
+
+  mkdir -p "$MOUNTPOINT"
+
+  qm disk mount "$VMID" "$DISK" "$MOUNTPOINT"
+
+  mkdir -p "$MOUNTPOINT/conf"
+  cp "$CONFIG_SRC" "$MOUNTPOINT/conf/config.xml"
+
+  qm disk unmount "$VMID" "$DISK"
 fi
+
 EOF
 
 chmod +x "$HOOK_PATH"
