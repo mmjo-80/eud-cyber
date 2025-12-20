@@ -11,10 +11,6 @@ if [[ $EUID -ne 0 ]]; then
   exit 1
 fi
 
-echo "Installing Open vSwitch..."
-apt update
-apt install -y openvswitch-switch ifupdown2
-
 systemctl enable --now openvswitch-switch
 
 echo "Backing up network config..."
