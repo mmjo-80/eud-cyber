@@ -21,8 +21,8 @@ packages:
   - docker.io
   
 runcmd:
-   -apt-get update
-   - apt-get install -y docker-compose-v2
+  - apt-get update
+  - apt-get install -y docker-compose-v2
   
   # Enable Docker
   - systemctl enable docker
