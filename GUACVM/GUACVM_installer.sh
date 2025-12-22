@@ -13,7 +13,25 @@ MEMORY=4096       # in MB
 CORES=4
 DISK_SIZE="32"    # the number is in GB
 BRIDGE="vmbr0"
+SNIPPET_DIR="/var/lib/vz/snippets"
+SRC_USERDATA="$(pwd)GUACVM/GUAC_userdata.yaml"     # source file
+DST_USERDATA="GUAC_userdata.yaml"            # destination filename
 # ==================
+
+DST_PATH="${SNIPPET_DIR}/${DST_USERDATA}"
+
+echo "Checking Cloud-Init user-data snippet..."
+
+# Check if snippet already exists
+if [[ -f "$DST_PATH" ]]; then
+  echo "User-data already exists: $DST_PATH"
+else
+  echo "User-data not found. Copying..."
+  cp "$SRC_USERDATA" "$DST_PATH"
+  chmod 644 "$DST_PATH"
+  echo "User-data copied to $DST_PATH"
+fi
+echo "Done."
 
 # Ask user for network type
 echo "Select network configuration:"
@@ -97,6 +115,8 @@ qm set $VMID --sshkeys ~/.ssh/id_rsa.pub \
   --searchdomain cloud.local \
   --nameserver $DNS_SERVER \
   --ciupgrade 1
+  --cicustom "user=local:snippets/GUAC_userdata.yaml"
+
 
 # ===== Start VM =====
 echo "Starting VM $VMID ($VM_NAME)..."
