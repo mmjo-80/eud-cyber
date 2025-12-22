@@ -19,7 +19,7 @@ packages:
   - ca-certificates
   - curl
   - docker.io
-  - docker-compose-
+  - docker-compose-v2
   - ssh
 
 runcmd:
