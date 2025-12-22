@@ -21,8 +21,8 @@ packages:
   - docker.io
   
 write_files:
-  - path: /home/ubuntu/test.txt
-    owner: ubuntu:ubuntu
+  - path: /root/test.txt
+    owner: root:root
     permissions: '0644'
     content: |
       cloud-init works
