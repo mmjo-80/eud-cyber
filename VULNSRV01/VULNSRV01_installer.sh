@@ -75,7 +75,8 @@ qm set $VMID --sshkeys ~/.ssh/id_rsa.pub \
   --ipconfig0 $IP_ADDR \
   --searchdomain cloud.local \
   --nameserver $DNS_SERVER \
-  --ciupgrade 1
+  --ciupgrade \
+  --cicustom "user=local:snippets/VULNSRV1_userdata.yaml"
 
 # ===== Start VM =====
 echo "Starting VM $VMID ($VM_NAME)..."
