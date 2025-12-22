@@ -21,7 +21,7 @@ packages:
   - docker.io
   
 write_files:
-  - path: /root/test.txt
+  - path: /root/docker-compose.yml
     owner: root:root
     permissions: '0644'
     content: |
