@@ -4,6 +4,7 @@ set -e
 ### VARIABLES (EDIT THESE) ###
 BRIDGE1="lan1"
 BRIDGE2="lan2"
+BRIDGE3="oobm"
 
 ### CHECK ROOT ###
 if [[ $EUID -ne 0 ]]; then
@@ -28,6 +29,10 @@ iface $BRIDGE1 inet static
 
 auto $BRIDGE2
 iface $BRIDGE2 inet static
+    ovs_type OVSBridge
+
+auto $BRIDGE3
+iface $BRIDGE3 inet static
     ovs_type OVSBridge
 
 # ===== End Open vSwitch configuration =====
