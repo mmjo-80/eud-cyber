@@ -115,7 +115,7 @@ qm set $VMID --sshkeys ~/.ssh/id_rsa.pub \
   --cipassword 'Password1!' \
   --searchdomain cloud.local \
   --nameserver $DNS_SERVER \
-  --ciupgrade 1
+  --ciupgrade 1 \
   --cicustom "user=local:snippets/GUAC_userdata.yaml"
 
 
