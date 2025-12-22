@@ -108,5 +108,5 @@ runcmd:
            - 8443:443
            networks:
              - guacnetwork_compose          
-
+             
   - docker compose -f /opt/guacamole/docker-compose.yml up -d
