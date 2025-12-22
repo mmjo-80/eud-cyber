@@ -20,12 +20,11 @@ packages:
   - curl
   - docker.io  
 write_files:
-  - path: /home/ubuntu/docker-compose.yml
-    owner: ubuntu
+  - path: /home/ubuntu/test.txt
+    owner: ubuntu:ubuntu
     permissions: '0644'
     content: |
-      networks:
-         guacnetwork_compose:          
+      cloud-init works
 runcmd:
   - apt-get update
   - apt-get install -y docker-compose-v2 qemu-guest-agent
