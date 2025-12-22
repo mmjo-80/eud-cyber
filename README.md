@@ -1,7 +1,7 @@
 # eud-cyber
 cyber eud
 
-This script is testet with proxmox 9.1 \
+This script is testet with proxmox 9.1
 
 
 missing \
@@ -28,5 +28,5 @@ Network \
     oobm 172.20.0.12/24 (not done yet) \
   server2025 (not done yet) \
     lan2 10.0.0.2/24 (not done yet) \
-    oobm 172.20.0.20/24 (not done yet) \
+    oobm 172.20.0.20/24 (not done yet)
     
