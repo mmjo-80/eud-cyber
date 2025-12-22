@@ -19,6 +19,21 @@ SNIPPET_DIR="/var/lib/vz/snippets"
 SRC_USERDATA="$(pwd)/VULNSRV01/VULNSRV01_userdata.yaml"     # source file
 DST_USERDATA="VULNSRV01_userdata.yaml"            # destination filename
 
+DST_PATH="${SNIPPET_DIR}/${DST_USERDATA}"
+
+echo "Checking Cloud-Init user-data snippet..."
+
+# Check if snippet already exists
+if [[ -f "$DST_PATH" ]]; then
+  echo "User-data already exists: $DST_PATH"
+else
+  echo "User-data not found. Copying..."
+  cp "$SRC_USERDATA" "$DST_PATH"
+  chmod 644 "$DST_PATH"
+  echo "User-data copied to $DST_PATH"
+fi
+echo "Done."
+
 # ===== Find next free VMID =====
 VMID=$START_VMID
 while qm status $VMID &>/dev/null; do
