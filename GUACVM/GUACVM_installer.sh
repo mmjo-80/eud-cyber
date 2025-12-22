@@ -14,7 +14,7 @@ CORES=4
 DISK_SIZE="32"    # the number is in GB
 BRIDGE="vmbr0"
 SNIPPET_DIR="/var/lib/vz/snippets"
-SRC_USERDATA="$(pwd)GUACVM/GUAC_userdata.yaml"     # source file
+SRC_USERDATA="$(pwd)/GUACVM/GUAC_userdata.yaml"     # source file
 DST_USERDATA="GUAC_userdata.yaml"            # destination filename
 # ==================
 
