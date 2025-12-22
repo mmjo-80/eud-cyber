@@ -24,13 +24,16 @@ IMG_DIR="/var/lib/vz/template"
 IMG_PATH="${IMG_DIR}/${IMG_BASE}"
 IMG_BZ2_PATH="${IMG_DIR}/${IMG_BZ2}"
 
+GENERATESH="$(pwd)/OPENSENSE/generate_config.sh"
 CONFIG_SRC="/root/opnsense/config.xml"
 HOOK_PATH="/var/lib/vz/snippets/opnsense-hook.sh"
 
+
 ### ===== CHECKS =====
 if [[ ! -f "$CONFIG_SRC" ]]; then
-  echo "ERROR: config.xml not found at $CONFIG_SRC"
-  exit 1
+#  echo "ERROR: config.xml not found at $CONFIG_SRC"
+  echo "generating config.xml"
+  bash $GENERATESH
 fi
 
 mkdir -p "$IMG_DIR"
