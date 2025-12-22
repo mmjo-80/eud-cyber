@@ -8,9 +8,9 @@ missing
   ip address validation on vm opnsense and guacvm
 
 Network \
-  guacvm
-    vmbri0  static/dhcp
-    oobm  172.20.0.1/24
+  guacvm \
+    vmbri0  static/dhcp \
+    oobm  172.20.0.1/24 \
   opnsense
     vmbri0  static/dhcp
     lan1  192.168.1.1/24
