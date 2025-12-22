@@ -7,7 +7,7 @@ This script is testet with proxmox 9.1
 missing
   ip address validation on vm opnsense and guacvm
 
-Network
+Network \
   guacvm
     vmbri0  static/dhcp
     oobm  172.20.0.1/24
