@@ -1,37 +1,47 @@
 #!/bin/bash
 
-USERNAME= "lab"
-PASSWORD= "Password!1"
-VMNAME= "WIN11"
+vmid=110
+USERNAME="lab"
+PASSWORD="Password!1"
+VMNAME="WIN11"
+VMDOWNLOAD_PATH="$(pwd)/" # Where to download the Windows 11 Developer Image
 IMG_NAME="WinDevEval.VMWare.zip"
 IMG_PATH="$(pwd)/WinDevEval.VMWare.zip"
+IMG_PATH2="$(pwd)/WinDev2407Eval-disk1.vmdk"
 IMG_URL="https://aka.ms/windev_VM_vmware"
-VIRT_PATH="/var/lib/vz/template/iso/"
-VMSTORAGE="FastDisk" # Where should the VM saved on Proxmox
+VIRT_PATH="/var/lib/vz/template/iso/virtio-win.iso"
+VIRT_URL="https://fedorapeople.org/groups/virt/virtio-win/direct-downloads/stable-virtio/virtio-win.iso"
+#VMSTORAGE="FastDisk" # Where should the VM saved on Proxmox
 VMNET="virtio,bridge=lan1" # Your network definition for VM
 VIRTIO_ISO="ISOimages:iso/virtio-win.iso" # Location of virtio driver ISO
-# --- End Config Section
-
-#echo "[i] Downloading VM image"
-#cd $VMDOWNLOAD_PATH
-#wget -O WinDevEval.VMWare.zip https://aka.ms/windev_VM_vmware
 
 # ===== Download Windows 11 if missing =====
-if [ ! -f "$IMG_PATH" ]; then
-    echo "Downloading $IMG_NAME IMG..."
-    wget --show-progress -O "$IMG_PATH" "$IMG_URL"
+if [[ ! -f "IMG_PATH" ]]; then
+    if [[ ! -f "IMG_PATH2" ]]; then
+        echo "Neither file exists, downloading..."
+        wget --show-progress -O "$IMG_PATH" "$IMG_URL"
+    else
+        echo "$IMG_PATH2 exits, skipping download"
+    fi
 else
-    echo "IMG already exists: $IMG_PATH"
+    echo "$IMG_PATH exists, skipping download"
 fi
 
-unzip -o $IMG_PATH
-#rm $IMG_PATH
+if [  -f "$IMG_PATH" ]; then
+    echo "Unzipping $IMG_PATH IMG..."
+    unzip -o $IMG_PATH
+    rm $IMG_PATH
+else
+    echo "File allready unzipped exists"
+fi
 
-echo "[+] Downloading VirtIO drivers"
-wget -O "$VIRT_PATH" \
-https://fedorapeople.org/groups/virt/virtio-win/direct-downloads/stable-virtio/virtio-win.iso
+if [ ! -f "$VIRT_PATH" ]; then
+        echo "[+] Downloading VirtIO drivers"
+        wget -O "$VIRT_PATH" "VIRT_URL"
+else
+    echo "$VIRT_PATH allready exists"
+fi
 
-vmid=110
 echo "[i] Importing VM into Proxmox..."
 latestOVF=$(ls -Art WinDev*.ovf | tail -n 1)
 echo "[i] Next VM ID: $vmid, OVF template: $latestOVF"
