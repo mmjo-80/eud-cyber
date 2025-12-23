@@ -25,8 +25,45 @@ packages:
   - xorg
   - dbus-x11
   - openssh-server
+  - tigervnc-standalone-server
+  - tigervnc-common
+
+write_files:
+  - path: /home/kali/.vnc/xstartup
+    owner: kali:kali
+    permissions: "0755"
+    content: |
+      #!/bin/sh
+      unset SESSION_MANAGER
+      unset DBUS_SESSION_BUS_ADDRESS
+      exec startxfce4 &
+  - path: /etc/systemd/system/vncserver@:1.service
+    permissions: "0644"
+    content: |
+      [Unit]
+      Description=TigerVNC Server for display :1
+      After=network.target
+
+      [Service]
+      Type=forking
+      User=kali
+      PAMName=login
+      PIDFile=/home/kali/.vnc/%H%i.pid
+      ExecStart=/usr/bin/vncserver -localhost no :1
+      ExecStop=/usr/bin/vncserver -kill :1
+
+      [Install]
+      WantedBy=multi-user.target
+
 
 runcmd:
   - systemctl enable ssh
   - systemctl enable lightdm
   - systemctl set-default graphical.target
+  - mkdir -p /home/kali/.vnc
+  - chown -R kali:kali /home/kali/.vnc
+  - su - kali -c "printf 'vncpassword\nvncpassword\n\n' | password"
+  - systemctl daemon-reexec
+  - systemctl daemon-reload
+  - systemctl enable vncserver@:1
+  - systemctl start vncserver@:1
