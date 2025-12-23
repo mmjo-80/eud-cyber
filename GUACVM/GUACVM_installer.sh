@@ -25,7 +25,7 @@ CORES=4
 DISK_SIZE="32G"    # the number is in GB
 BRIDGE="vmbr0"
 BRIDGE1="oobm"
-OOBM_IP="172.20.0.1/24"
+OOBM_IP="ip=172.20.0.1/24"
 SNIPPET_DIR="/var/lib/vz/snippets"
 SRC_USERDATA="$(pwd)/GUACVM/GUAC_userdata.yaml"     # source file
 DST_USERDATA="GUAC_userdata.yaml"            # destination filename
