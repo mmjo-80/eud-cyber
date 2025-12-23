@@ -133,7 +133,9 @@ qm set $VMID --ipconfig0 $IP_ADDR \
   --cicustom "user=local:snippets/GUAC_userdata.yaml"
 
 if [[ "$IP_ADDR" != "ip=dhcp" ]]; then
-  qm set $VMID --nameserver $DNS_SERVER"
+  qm set $VMID --nameserver $DNS_SERVER
+else
+  echo "DHCP enabled no DNS server needed"
 fi
 
 # ===== Start VM =====
