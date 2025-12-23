@@ -7,6 +7,7 @@ OPENVSWITCH="./open-vswitch.sh"
 VULNSRV01="./VULNSRV01/VULNSRV01_installer.sh"
 OPNSENSE="./OPENSENSE/OPNSENSE_installer.sh"
 PREREQ="./pre_req.sh"
+KALI01="./KALI01/KALI01_installer.sh"
 
 echo "=============================="
 echo " Proxmox Deployment Menu"
@@ -16,7 +17,8 @@ echo "2) Install & configure Open vSwitch"
 echo "3) Create OPNsense VM"
 echo "4) Create Guacamole VM"
 echo "5) Create Vuln-server01 VM"
-echo "6) Run ALL"
+echo "6) Create KALI01 VM"
+echo "7) Run ALL"
 echo "0) Exit"
 echo "=============================="
 
@@ -44,6 +46,10 @@ case "$CHOICE" in
     bash "$VULNSRV01"
     ;;
   6)
+    echo "Starting KALI01 VM creation... "
+    bask "$KALI01"
+    ;;
+  7)
     echo "Running ALL steps..."
 
     echo "Checking packages and snippets..."
