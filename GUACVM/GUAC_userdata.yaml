@@ -107,5 +107,6 @@ runcmd:
   - docker run --rm 'guacamole/guacamole:1.6.0' /opt/guacamole/bin/initdb.sh --postgresql > ./init/initdb.sql
   - mkdir ./record >/dev/null 2>&1
   - chmod -R 777 ./record
-  - openssl req -nodes -newkey rsa:2048 -new -x509 -keyout nginx/ssl/self-ssl.key -out nginx/ssl/self.cert -subj '/C=DK/CN=guacamole.com'             
+  - openssl req -nodes -newkey rsa:2048 -new -x509 -keyout nginx/ssl/self-ssl.key -out nginx/ssl/self.cert -subj '/C=DK/CN=guacamole.com'  
+  - cp /root/docker-compose.yml /opt/guacamole/docker-compose.yml
 #  - docker compose -f /opt/guacamole/docker-compose.yml up -d
