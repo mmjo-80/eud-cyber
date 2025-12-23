@@ -4,17 +4,29 @@ USERNAME= lab
 PASSWORD= Password!1
 VMNAME= WIN11
 VMDOWNLOAD_PATH="$(pwd)/" # Where to download the Windows 11 Developer Image
+IMG_NAME="WinDevEval.VMWare.zip"
+IMG_PATH="$(pwd)/WinDevEval.VMWare.zip"
+IMG_URL="https://aka.ms/windev_VM_vmware"
 VIRT_PATH="/var/lib/vz/template/iso/"
 VMSTORAGE="FastDisk" # Where should the VM saved on Proxmox
 VMNET="virtio,bridge=lan1" # Your network definition for VM
 VIRTIO_ISO="ISOimages:iso/virtio-win.iso" # Location of virtio driver ISO
 # --- End Config Section
 
-echo "[i] Downloading VM image"
-cd $VMDOWNLOAD_PATH
-wget -O WinDevEval.VMWare.zip https://aka.ms/windev_VM_vmware
-unzip -o WinDevEval.VMWare.zip
-rm WinDevEval.VMWare.zip
+#echo "[i] Downloading VM image"
+#cd $VMDOWNLOAD_PATH
+#wget -O WinDevEval.VMWare.zip https://aka.ms/windev_VM_vmware
+
+# ===== Download Windows 11 if missing =====
+if [ ! -f "$IMG_PATH" ]; then
+    echo "Downloading $IMG_NAME IMG..."
+    wget --show-progress -O "$IMG_PATH" "$IMG_URL"
+else
+    echo "IMG already exists: $IMG_PATH"
+fi
+
+unzip -o $IMG_PATH
+#rm $IMG_PATH
 
 echo "[+] Downloading VirtIO drivers"
 wget -O "$VIRT_PATH" \
