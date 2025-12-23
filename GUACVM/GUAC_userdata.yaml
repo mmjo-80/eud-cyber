@@ -89,8 +89,8 @@ write_files:
           # - ./nginx/ssl/self-ssl.key:/etc/nginx/ssl/self-ssl.key:ro
           # ports:
           # - 8443:443
-           networks:
-             - guacnetwork_compose          
+          #networks:
+          #  - guacnetwork_compose          
 runcmd:
   - apt-get update
   - apt-get install -y docker-compose-v2 qemu-guest-agent
