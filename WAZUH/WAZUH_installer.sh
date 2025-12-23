@@ -28,6 +28,7 @@ BRIDGE1="oobm"
 IP_ADDR="ip=192.168.1.200/24"
 DNS_SERVER="192.168.1.1"
 OOBM_IP="ip=172.20.0.20/24"
+IP_GW="gw=192.168.1.1"
 SNIPPET_DIR="/var/lib/vz/snippets"
 SRC_USERDATA="$(pwd)/WAZUH/WAZUH_userdata.yaml"     # source file
 DST_USERDATA="WAZUH_userdata.yaml"            # destination filename
@@ -103,7 +104,7 @@ qm set $VMID --agent enabled=1
 qm set $VMID --onboot 1
 
 # ===== Cloud-init =====
-qm set $VMID --ipconfig0 $IP_ADDR \
+qm set $VMID --ipconfig0 $IP_ADDR,$IP_GW \
   --ipconfig1 $OOBM_IP \
   --searchdomain cloud.local \
   --nameserver $DNS_SERVER \
