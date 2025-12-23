@@ -49,7 +49,7 @@ fi
 
 if [ ! -f "$VIRT_PATH" ]; then
         echo "[+] Downloading VirtIO drivers"
-        wget -O "$VIRT_PATH" "VIRT_URL"
+        wget -O "$VIRT_PATH" "$VIRT_URL"
 else
     echo "$VIRT_PATH allready exists"
 fi
