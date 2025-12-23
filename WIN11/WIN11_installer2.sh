@@ -1,19 +1,31 @@
 #!/bin/bash
 
-vmid=110
+LOGFILE="$(pwd)/LOGS/WIN11.log"
+
+# Create log file and ensure permissions
+touch "$LOGFILE"
+chmod 600 "$LOGFILE"
+
+# Redirect all output (stdout + stderr) to log AND console
+exec > >(tee -a "$LOGFILE") 2>&1
+
+echo "===== WIN11 installation started at $(date) ====="
+
+START_VMID=100
+BASE_NAME="WIN11"
 USERNAME="lab"
 PASSWORD="Password!1"
-VMNAME="WIN11"
-VMDOWNLOAD_PATH="$(pwd)/" # Where to download the Windows 11 Developer Image
 IMG_NAME="WinDevEval.VMWare.zip"
 IMG_PATH="$(pwd)/WinDevEval.VMWare.zip"
 IMG_PATH2="$(pwd)/WinDev2407Eval-disk1.vmdk"
 IMG_URL="https://aka.ms/windev_VM_vmware"
 VIRT_PATH="/var/lib/vz/template/iso/virtio-win.iso"
 VIRT_URL="https://fedorapeople.org/groups/virt/virtio-win/direct-downloads/stable-virtio/virtio-win.iso"
-#VMSTORAGE="FastDisk" # Where should the VM saved on Proxmox
+VMSTORAGE="local-lvm" # Where should the VM saved on Proxmox
 VMNET="virtio,bridge=lan1" # Your network definition for VM
 VIRTIO_ISO="ISOimages:iso/virtio-win.iso" # Location of virtio driver ISO
+OVF="$(pwd/WinDev2407Eval.ovf"
+
 
 # ===== Download Windows 11 if missing =====
 if [[ ! -f "IMG_PATH" ]]; then
@@ -42,30 +54,41 @@ else
     echo "$VIRT_PATH allready exists"
 fi
 
+# ===== Find next free VMID =====
+VMID=$START_VMID
+while qm status $VMID &>/dev/null; do
+    VMID=$((VMID + 1))
+done
+echo "Selected free VMID: $VMID"
+
+# ===== Handle VM name collision =====
+VM_NAME="$BASE_NAME"
+COUNT=1
+while qm list | awk '{print $2}' | grep -x "$VM_NAME" &>/dev/null; do
+    VM_NAME="${BASE_NAME}-${COUNT}"
+    COUNT=$((COUNT + 1))
+done
+echo "VM name to use: $VM_NAME"
+
 echo "[i] Importing VM into Proxmox..."
-latestOVF=$(ls -Art WinDev*.ovf | tail -n 1)
-echo "[i] Next VM ID: $vmid, OVF template: $latestOVF"
-qm importovf $vmid $latestOVF $VMSTORAGE --format raw
-[ -z "$VMNAME" ] && VMNAME=${latestOVF%.*}
-qm set $vmid --name $VMNAME
-qm set $vmid --bios ovmf
-qm set $vmid --cpu host
-qm set $vmid --machine pc-q35-8.1
-qm set $vmid --agent 1,fstrim_cloned_disks=1
-sed -i 's/scsi0:/sata0:/' /etc/pve/qemu-server/$vmid.conf
-sed -i 's/sata0:.*/&,discard=on/' /etc/pve/qemu-server/$vmid.conf
-qm set $vmid --ide2 media=cdrom,file=$VIRTIO_ISO
-qm set $vmid --boot order='sata0;ide2'
-qm set $vmid --ostype win11
-qm set $vmid --net0 $VMNET
-qm set $vmid --efidisk0 $VMSTORAGE:1,efitype=4m,pre-enrolled-keys=1,size=4M
-qm set $vmid --tpmstate0 $VMSTORAGE:1,size=4M,version=v2.0
-qm start $vmid
+qm importovf $VMID $OVF $VMSTORAGE --format raw
+qm set $VMID --name $VM_NAME
+qm set $VMID --bios ovmf
+qm set $VMID --cpu host
+qm set $VMID --machine pc-q35-8.1
+qm set $VMID --agent 1,fstrim_cloned_disks=1
+qm set $VMID --ide2 media=cdrom,file=$VIRTIO_ISO
+qm set $VMID --boot order='sata0;ide2'
+qm set $VMID --ostype win11
+qm set $VMID --net0 $VMNET
+qm set $VMID --efidisk0 $VMSTORAGE:1,efitype=4m,pre-enrolled-keys=1,size=4M
+qm set $VMID --tpmstate0 $VMSTORAGE:1,size=4M,version=v2.0
+qm start $VMID
 
 echo "[!] PLEASE install VIRTIO driver package from CD ROM on your newly created VM!"
 
 while true; do
-    RESULT=$(qm guest cmd $vmid ping)
+    RESULT=$(qm guest cmd $VMID ping)
     if [ $? -eq 0 ]; then
         echo "[i] QEMU agent seems to run on the new VM."
         break
@@ -80,11 +103,11 @@ sleep 30
 
 if [ -n "$USERNAME" ]; then
     echo "[i] Adding additional user to the system..."
-    RESULT=$(qm guest exec $vmid -- Powershell.exe -Command '$Password = ConvertTo-SecureString "'$PASSWORD'" -AsPlainText -Force; New-LocalUser -Name "'$USERNAME'" -Password $Password; Add-LocalGroupMember -Group "Administrators" -Member "'$USERNAME'"')
+    RESULT=$(qm guest exec $VMID -- Powershell.exe -Command '$Password = ConvertTo-SecureString "'$PASSWORD'" -AsPlainText -Force; New-LocalUser -Name "'$USERNAME'" -Password $Password; Add-LocalGroupMember -Group "Administrators" -Member "'$USERNAME'"')
 fi
 
 echo "[i] Preparing system so it can be managed by Ansible later on..."
-RESULT=$(qm guest exec $vmid -- Powershell.exe -Command '[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; $url = "https://raw.githubusercontent.com/AlexNabokikh/windows-playbook/master/setup.ps1"; $file = "$env:temp\setup.ps1"; (New-Object -TypeName System.Net.WebClient).DownloadFile($url, $file); powershell.exe -ExecutionPolicy ByPass -File $file -Verbose')
+RESULT=$(qm guest exec $VMID -- Powershell.exe -Command '[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; $url = "https://raw.githubusercontent.com/AlexNabokikh/windows-playbook/master/setup.ps1"; $file = "$env:temp\setup.ps1"; (New-Object -TypeName System.Net.WebClient).DownloadFile($url, $file); powershell.exe -ExecutionPolicy ByPass -File $file -Verbose')
 
 max_attempts=50
 attempt=1
@@ -94,7 +117,7 @@ while [ $attempt -le $max_attempts ]; do
     # Run the command and capture its output (due OpenSSH install attempt with
     # PowerShell we will check if it is finished. Means only one PowerShell process
     # is running: The one we use to count the PowerShell processes.
-    RESULT=$(qm guest exec $vmid -- PowerShell.exe -Command 'if((Get-Process -Name "powershell" | Measure-Object).Count -eq 1) { Write-Output "ready-for-reboot" }')
+    RESULT=$(qm guest exec $VMID -- PowerShell.exe -Command 'if((Get-Process -Name "powershell" | Measure-Object).Count -eq 1) { Write-Output "ready-for-reboot" }')
 
     # Check if the output contains "out-data"
     if [[ $RESULT == *"ready-for-reboot"* ]]; then
@@ -108,13 +131,13 @@ while [ $attempt -le $max_attempts ]; do
 done
 
 echo "[i] Removing virtio CD image from system (has to be rebooted for this task)"
-qm shutdown $vmid
-qm set $vmid --ide2 media=cdrom,file=none
-qm start $vmid
+qm shutdown $VMID
+qm set $VMID --ide2 media=cdrom,file=none
+qm start $VMID
 
 # Now we have to install OpenSSH again to enforce daemon...
 echo "[i] Preparing system so it can be managed by Ansible later on..."
-RESULT=$(qm guest exec $vmid -- Powershell.exe -Command '[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; $url = "https://raw.githubusercontent.com/AlexNabokikh/windows-playbook/master/setup.ps1"; $file = "$env:temp\setup.ps1"; (New-Object -TypeName System.Net.WebClient).DownloadFile($url, $file); powershell.exe -ExecutionPolicy ByPass -File $file -Verbose')
+RESULT=$(qm guest exec $VMID -- Powershell.exe -Command '[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; $url = "https://raw.githubusercontent.com/AlexNabokikh/windows-playbook/master/setup.ps1"; $file = "$env:temp\setup.ps1"; (New-Object -TypeName System.Net.WebClient).DownloadFile($url, $file); powershell.exe -ExecutionPolicy ByPass -File $file -Verbose')
 
 max_attempts=20
 attempt=1
@@ -122,7 +145,7 @@ attempt=1
 # Loop for maximum attempts
 while [ $attempt -le $max_attempts ]; do
     # Run the command and capture its output
-    RESULT=$(qm guest exec $vmid -- PowerShell.exe -Command 'Get-Process sshd')
+    RESULT=$(qm guest exec $VMID -- PowerShell.exe -Command 'Get-Process sshd')
 
     # Check if the output contains "out-data"
     if [[ $RESULT == *"out-data"* ]]; then
