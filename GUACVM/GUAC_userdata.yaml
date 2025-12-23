@@ -1,5 +1,8 @@
 #cloud-config
 
+hostname: GUACVM
+manage_etc_hosts: true
+
 users:
   - name: ubuntu
     sudo: ALL=(ALL) NOPASSWD:ALL
