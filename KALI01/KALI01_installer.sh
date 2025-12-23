@@ -23,10 +23,12 @@ ISO_STORAGE="local"
 DISK_STORAGE="local-lvm"
 MEMORY=4096       # in MB
 CORES=4
-DISK_SIZE="32G"    # the number is in GB
+DISK_SIZE="32G" # the number is in GB
 BRIDGE="lan1"
+BRIDGE1="oobm"
 IP_ADDR="ip=192.168.10.100/24"
 DNS_SERVER="192.168.10.1"
+OOBM_IP="ip=172.20.0.11/24"
 SNIPPET_DIR="/var/lib/vz/snippets"
 SRC_USERDATA="$(pwd)/KALI01/KALI01_userdata.yaml"     # source file
 DST_USERDATA="KALI01_userdata.yaml"            # destination filename
@@ -82,6 +84,7 @@ qm create $VMID \
   --cores $CORES \
   --cpu host \
   --net0 virtio,bridge=$BRIDGE \
+  --net1 virtio,bridge=$BRIDGE1 \
   --ostype l26
 
 # ===== Add LVM disk =====
@@ -107,6 +110,7 @@ qm set $VMID --onboot 1
 
 # ===== Cloud-init =====
 qm set $VMID --ipconfig0 $IP_ADDR \
+  --ipconfig1 $OOBM_IP \
   --searchdomain cloud.local \
   --nameserver $DNS_SERVER \
   --ciupgrade 1 \
