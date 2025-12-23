@@ -26,7 +26,7 @@ Network \
     oobm  172.20.0.10/24 \
   vulnsrv02 \
     lan1 (change to lan2 when opnsense has 2 lan) 192.168.1.210 \
-    oobm 172.20.0.21
+    oobm 172.20.0.21 \
   kali01 (not done yet) \
     lan1  192.168.1.100/24
     oobm  172.20.0.11/24  \
