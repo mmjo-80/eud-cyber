@@ -71,6 +71,9 @@ else
     echo "IMG already exists: $IMG_PATH"
 fi
 
+echo "[+] Extracting image"
+tar -xJf "$IMAGE"
+
 # ===== Create VM =====
 echo "Creating VM $VMID..."
 qm create $VMID \
