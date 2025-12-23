@@ -1,9 +1,8 @@
 #!/bin/bash
 
-USERNAME= lab
-PASSWORD= Password!1
-VMNAME= WIN11
-VMDOWNLOAD_PATH="$(pwd)/" # Where to download the Windows 11 Developer Image
+USERNAME= "lab"
+PASSWORD= "Password!1"
+VMNAME= "WIN11"
 IMG_NAME="WinDevEval.VMWare.zip"
 IMG_PATH="$(pwd)/WinDevEval.VMWare.zip"
 IMG_URL="https://aka.ms/windev_VM_vmware"
