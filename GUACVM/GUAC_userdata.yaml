@@ -104,8 +104,10 @@ runcmd:
   - mkdir ./init >/dev/null 2>&1
   - mkdir -p ./nginx/ssl >/dev/null 2>&1
   - chmod -R +x ./init
+  - wget -O /opt/guacamole/guacamole.sql.gz https://raw.githubusercontent.com/EUD-cyber/eud-cyber/main/GUACVM/guacamole.sql.gz
   - docker run --rm 'guacamole/guacamole:1.6.0' /opt/guacamole/bin/initdb.sh --postgresql > ./init/initdb.sql
+  - gunzip -c /opt/guacamole/guacamole.sql.gz > ./init/02-restore.sql
   - mkdir ./record >/dev/null 2>&1
   - chmod -R 777 ./record
 #  - openssl req -nodes -newkey rsa:2048 -new -x509 -keyout nginx/ssl/self-ssl.key -out nginx/ssl/self.cert -subj '/C=DK/CN=guacamole.com'  
-#  - docker compose -f /opt/guacamole/docker-compose.yml up -d
+  - docker compose -f /opt/guacamole/docker-compose.yml up -d
