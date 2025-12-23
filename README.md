@@ -8,9 +8,10 @@ missing \
   ip address validation on vm opnsense and guacvm \
   download cloud img to default folder and check if exits on each vm creation \
   all input first so the script will run without input after \
-  no docker on vulnsrv01
+  no docker on vulnsrv01 \
+  Problem with the WIN11 image, needs more testing \
+  Opnsense dont eat the config without a key \
   
-
 Network \
   guacvm \
     vmbri0  static/dhcp \
@@ -23,6 +24,9 @@ Network \
   vulnsrv01 \
     lan1  192.168.1.20 \
     oobm  172.20.0.10/24 \
+  vulnsrv02 \
+    lan1 (change to lan2 when opnsense has 2 lan) 192.168.1.210 \
+    oobm 172.20.0.21
   kali01 (not done yet) \
     lan1  192.168.1.100/24
     oobm  172.20.0.11/24  \
