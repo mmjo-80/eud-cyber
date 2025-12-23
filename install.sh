@@ -66,6 +66,9 @@ case "$CHOICE" in
 
     echo "Starting Vuln-server01 VM creation..."
     bash "$VULNSRV01"
+
+    echo "Starting KALI01 VM creation... "
+    bash "$KALI01"
     ;;
   0)
     echo "Exiting."
