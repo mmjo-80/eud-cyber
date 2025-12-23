@@ -119,7 +119,7 @@ while [ $attempt -le $max_attempts ]; do
     # is running: The one we use to count the PowerShell processes.
     RESULT=$(qm guest exec $VMID -- PowerShell.exe -Command 'if((Get-Process -Name "powershell" | Measure-Object).Count -eq 1) { Write-Output "ready-for-reboot" }')
 
-    # Check if the output contains "out-data"
+   # Check if the output contains "out-data"
     if [[ $RESULT == *"ready-for-reboot"* ]]; then
         echo "[i] OpenSSH Server Stage 1 successfully installed; now reboot required."
         break
