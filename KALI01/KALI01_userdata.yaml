@@ -14,3 +14,7 @@ chpasswd:
 
 package_update: true
 package_upgrade: true
+
+runcmd:
+  - apt-get update
+  - apt install -y kali-desktop-xfce
