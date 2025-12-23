@@ -5,6 +5,7 @@ set -e
 GUACVM="./GUACVM/GUACVM_installer.sh"
 OPENVSWITCH="./open-vswitch.sh"
 VULNSRV01="./VULNSRV01/VULNSRV01_installer.sh"
+VULNSRV02="./VULNSRV02/VULNSRV02_installer.sh"
 OPNSENSE="./OPENSENSE/OPNSENSE_installer.sh"
 PREREQ="./pre_req.sh"
 KALI01="./KALI01/KALI01_installer.sh"
@@ -19,8 +20,9 @@ echo "2) Install & configure Open vSwitch"
 echo "3) Create OPNsense VM"
 echo "4) Create Guacamole VM"
 echo "5) Create Vuln-server01 VM"
-echo "6) Create KALI01 VM"
-echo "7) Create WAZUH VM"
+echo "6) Create Vuln-server02 VM"
+echo "7) Create KALI01 VM"
+echo "8) Create WAZUH VM"
 echo "90) Run ALL"
 echo "99) Finish script"
 echo "0) Exit"
@@ -50,10 +52,14 @@ case "$CHOICE" in
     bash "$VULNSRV01"
     ;;
   6)
+    echo "Stating Vuln-server02 VM creation..."
+    bash "$VULNSRV02"
+    ;;
+  7)
     echo "Starting KALI01 VM creation... "
     bash "$KALI01"
     ;;
-  7)
+  8)
     echo "Starting Wazuh VM creation.... "
     bash "$WAZUH"
     ;;
@@ -75,6 +81,9 @@ case "$CHOICE" in
     echo "Starting Vuln-server01 VM creation..."
     bash "$VULNSRV01"
 
+    echo "Starting Vuln-server02 VM creation..."
+    bash "$VULNSRV02"
+    
     echo "Starting KALI01 VM creation... "
     bash "$KALI01"
 
