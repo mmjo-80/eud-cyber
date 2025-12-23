@@ -19,7 +19,6 @@ IMG_URL="https://kali.download/cloud-images/kali-2025.4/$IMG_NAME"
 IMG_NAME="kali-linux-2025.4-cloud-genericcloud-amd64.tar.xz"
 IMG_PATH="$(pwd)/KALI01/$IMG_NAME"
 DISK="disk.raw"
-DISK_PATH="$(pwd)/KALI01"
 ISO_STORAGE="local"
 DISK_STORAGE="local-lvm"
 MEMORY=4096       # in MB
@@ -67,13 +66,15 @@ echo "VM name to use: $VM_NAME"
 # ===== Download IMG if missing =====
 if [ ! -f "$IMG_PATH" ]; then
     echo "Downloading $IMG_NAME IMG..."
-    wget --show-progress -O "$IMG_PATH" "$IMG_URL"
+   # wget --show-progress -O "$IMG_PATH" "$IMG_URL"
+    curl -fL -o  $IMG_PATH \
+    $IMG_URL
 else
     echo "IMG already exists: $IMG_PATH"
 fi
 
 echo "[+] Extracting image"
-tar -xJf $DISK_PATH$IMG_NAME
+tar -xJf $IMG_PATH
 
 # ===== Create VM =====
 echo "Creating VM $VMID..."
