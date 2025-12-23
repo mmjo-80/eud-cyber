@@ -96,8 +96,8 @@ case "$CHOICE" in
     echo "Starting Wazuh VM creation... "
     bash "$WAZUH"
 
-    echo "Starting Windows 11 VM creation... "
-    bash "$WIN11"
+#    echo "Starting Windows 11 VM creation... "
+#    bash "$WIN11"
     
     echo "Start finishing script..."
     bash "$FINISH"
