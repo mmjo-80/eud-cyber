@@ -26,7 +26,7 @@ CORES=4
 DISK_SIZE="32G" # the number is in GB
 BRIDGE="lan1"
 BRIDGE1="oobm"
-IP_ADDR="ip=192.168.1.100/24"
+IP_ADDR="ip=192.168.1.100/24,gw=192.168.1.1"
 DNS_SERVER="192.168.1.1"
 OOBM_IP="ip=172.20.0.11/24"
 SNIPPET_DIR="/var/lib/vz/snippets"
