@@ -45,7 +45,7 @@ write_files:
         eval "$(dbus-launch --sh-syntax)"
       fi
       
-      startxfce4 &
+      exec startxfce4
       
   - path: /etc/systemd/system/vncserver@:1.service
     permissions: "0644"
