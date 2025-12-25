@@ -24,8 +24,8 @@ package_upgrade: true
 
 packages:
   - kali-desktop-xfce
-  - lightdm
-  - xorg
+#  - lightdm
+#  - xorg
   - dbus-x11
   - openssh-server
   - tigervnc-standalone-server
@@ -37,9 +37,17 @@ write_files:
     permissions: "0755"
     content: |
       #!/bin/sh
+      
       unset SESSION_MANAGER
       unset DBUS_SESSION_BUS_ADDRESS
-      exec startxfce4 &
+      
+      # Start a D-Bus session explicitly
+      if command -v dbus-launch >/dev/null 2>&1; then
+        eval "$(dbus-launch --sh-syntax)"
+      fi
+      
+      startxfce4 &
+      
   - path: /etc/systemd/system/vncserver@:1.service
     permissions: "0644"
     content: |
@@ -63,8 +71,8 @@ runcmd:
   - apt-get update
   - apt install -y xfce4 xfce4-goodies kali-linux-everything
   - systemctl enable ssh
-  - systemctl enable lightdm
-  - systemctl set-default graphical.target
+ # - systemctl enable lightdm
+  - systemctl set-default multi-user.target
   - mkdir -p /home/kali/.vnc
   - mkdir -p /home/kali/.config/tigervnc
   - chown -R kali:kali /home/kali
