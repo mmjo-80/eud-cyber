@@ -57,7 +57,7 @@ write_files:
 
 runcmd:
   - apt-get update
-  - apt install -y xfce4 xfce4-goodies
+  - apt install -y xfce4 xfce4-goodies kali-linux-everything
   - systemctl enable ssh
   - systemctl enable lightdm
   - systemctl set-default graphical.target
