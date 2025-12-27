@@ -38,7 +38,7 @@ IMG_PATH="${IMG_DIR}/${IMG_BASE}"
 IMG_BZ2_PATH="${IMG_DIR}/${IMG_BZ2}"
 
 GENERATESH="$(pwd)/OPENSENSE/generate_config.sh"
-CONFIG_SRC="/root/opnsense/config.xml"
+CONFIG_SRC="/root/opnsense/iso/conf/config.xml"
 
 
 ## ===== CHECKS =====
