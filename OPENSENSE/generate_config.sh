@@ -45,7 +45,7 @@ else
   exit 1
 fi
 
-cat > /root/opnsense/config.xml <<EOF
+cat > $(pwd)/iso/conf/config.xml <<EOF
 <?xml version="1.0"?>
 <opnsense>
   <system>
