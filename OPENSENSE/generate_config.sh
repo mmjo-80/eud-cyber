@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-mkdir -p /root/opnsense
+mkdir -p $(pwd)/iso/conf
 
 echo "=== OPNsense WAN IP Configuration ==="
 echo "1) DHCP"
@@ -16,7 +16,7 @@ DOMAIN="local"
 TIMEZONE="UTC"
 
 # LAN defaults
-LAN_IP="192.168.10.1"
+LAN_IP="192.168.1.1"
 LAN_CIDR="24"
 
 # Default password: opnsense
